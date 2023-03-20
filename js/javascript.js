@@ -130,6 +130,10 @@ function negate() {
 
 function dot() {
     if (currentValue.includes(".")) return;
+    if (equaled === true){ 
+        currentValue = "";
+        equaled = false;
+    }
     if (currentValue === "") currentValue = "0.";
     else currentValue += ".";
 }
