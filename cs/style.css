@@ -20,6 +20,14 @@ body {
     border: 1px solid black;
 }
 
+.current-value-display {
+    text-align: right;
+}
+
+.past-value-display {
+    font-size: 20px;
+}
+
 .button-row {
     display: flex;
     height: 100%;

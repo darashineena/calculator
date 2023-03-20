@@ -1,15 +1,28 @@
 let currentValue = ""; //stored as a string
 let pastValue = "";
-const numberDisplay = document.querySelector(".number-display");
+let currentOperation = "";
+let equaled;
+
+const currentValueDisplay = document.querySelector(".current-value-display");
+const pastValueDisplay = document.querySelector(".past-value-display");
+
 const buttonArray = document.querySelectorAll("button");
 buttonArray.forEach(button => {
     button.addEventListener('click', () => {
         if (Number(button.id)) {
+            if (equaled === true){ 
+                currentValue = "";
+                equaled = false;
+            }
             currentValue = currentValue + button.id;
             handleNumberDisplay();
         }
         else if (button.id === "0") {
             if (!(currentValue === "")) {
+                if (equaled === true){ 
+                    currentValue = "";
+                    equaled = false;
+                }
                 currentValue = currentValue + button.id;
                 handleNumberDisplay();
             }
@@ -21,6 +34,13 @@ buttonArray.forEach(button => {
 });
 
 function determineFunction(button) {
+    if (button === ':' || button === 'X' || button === '-' || button === '+') {
+        getRidOfLingeringDots();
+        if (!(currentOperation === "")) {
+            equals();
+        }
+        currentValueIsPast();
+    }
     switch (button) {
         case 'CE':
             CE();
@@ -32,18 +52,13 @@ function determineFunction(button) {
             DEL();
             break;
         case ':':
-
-            break;
         case 'X':
-
-            break;
         case '-':
-
-            break;
         case '+':
-            
+            currentOperation = button;
+            break;
         case '=':
-
+            equals();
             break;
         case '+/-':
             negate();
@@ -52,6 +67,7 @@ function determineFunction(button) {
             dot();
             break;
     }
+    turnNumbersToStrings();
     handleNumberDisplay();
 }
 
@@ -62,50 +78,85 @@ function CE(){
 function C(){
     currentValue = '';
     pastValue = '';
+    currentOperation ='';
 }
 
 function DEL() {
     currentValue = currentValue.slice(0, currentValue.length - 1);
-    console.log(currentValue);
-}
-function division() {
-
 }
 
-function multiplication() {
-
+function division(result) {
+    return result = pastValue / currentValue;
 }
 
-function subtraction() {
-
+function multiplication(result) {
+    return result = pastValue * currentValue;
 }
 
-function addition() {
+function subtraction(result) {
+    return result = pastValue - currentValue;
+}
 
+function addition(result) {
+    return result = pastValue + currentValue;
 }
 
 function equals() {
-
+    turnStringsToNumbers();
+    switch (currentOperation) {
+        case ":":
+            currentValue = division();
+            break;
+        case "X":
+            currentValue = multiplication();
+            break;
+        case "-": 
+            currentValue = subtraction();
+            break;
+        case "+":
+            currentValue = addition();
+            break;
+    }
+    pastValue = "";
+    currentOperation = "";
+    equaled = true;
 }
 
 function negate() {
+    if (currentValue === "" || currentValue == 0) return;
     currentValue = Number(currentValue) * -1;
-    console.log(typeof currentValue);
     currentValue = String(currentValue);
-    console.log(typeof currentValue);
 }
 
 function dot() {
+    if (currentValue.includes(".")) return;
     if (currentValue === "") currentValue = "0.";
     else currentValue += ".";
 }
 
-// function calculator(button) {
-//     console.log(button);
-// }
+function currentValueIsPast() {
+    pastValue = currentValue;
+    currentValue = "";
+}
+
+function turnStringsToNumbers() {
+    currentValue = Number(currentValue);
+    pastValue = Number(pastValue);
+}
+
+function turnNumbersToStrings() {
+    currentValue = String(currentValue);
+    pastValue = String(pastValue);
+}
+
+function getRidOfLingeringDots() {
+    if (currentValue.slice(-1) === ".") currentValue = currentValue.slice(0, currentValue.length - 1);
+    if (pastValue.slice(-1) === ".") pastValue = pastValue.slice(0, currentValue.length - 1);
+}
 
 function handleNumberDisplay() {
-    if (currentValue === "") numberDisplay.textContent = "0";
-    else if (currentValue.slice(-1) === ".") numberDisplay.textContent = currentValue + "0";
-    else numberDisplay.textContent = currentValue;
+    if (currentValue === "") currentValueDisplay.textContent = "0";
+    else if (currentValue.slice(-1) === ".") currentValueDisplay.textContent = currentValue + "0";
+    else currentValueDisplay.textContent = currentValue;
+    pastValueDisplay.textContent = pastValue + ' ' + `${currentOperation}`;
 }
