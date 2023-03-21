@@ -35,6 +35,18 @@ buttonArray.forEach(button => {
     });
 });
 
+
+document.addEventListener('keypress', (event) => {
+    let pressedKey;
+    if (event.key === "Enter") pressedKey = "=";
+    else if (event.key === "/") pressedKey = ":";
+    else if (event.key === ",") pressedKey = ".";
+    else if (event.key === "*") pressedKey = "X";
+    else pressedKey = event.key;
+    console.log(event);
+    document.getElementById(pressedKey).click();
+})
+
 function determineFunction(button) {
     if (button === ':' || button === 'X' || button === '-' || button === '+') {
         getRidOfLingeringDots();
