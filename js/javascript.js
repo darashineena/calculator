@@ -10,6 +10,7 @@ const buttonArray = document.querySelectorAll("button");
 buttonArray.forEach(button => {
     button.addEventListener('click', () => {
         if (Number(button.id)) {
+            if (currentValue.length > 20) return;
             if (equaled === true){ 
                 currentValue = "";
                 equaled = false;
@@ -18,6 +19,7 @@ buttonArray.forEach(button => {
             handleNumberDisplay();
         }
         else if (button.id === "0") {
+            if (currentValue.length > 20) return;
             if (!(currentValue === "")) {
                 if (equaled === true){ 
                     currentValue = "";
